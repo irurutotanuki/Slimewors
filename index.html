@@ -186,6 +186,18 @@
             height: 40px;
             animation: spin 1s linear infinite;
         }
+        .plus-value {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: #f59e0b;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 1px 4px;
+            border-radius: 9999px;
+            line-height: 1;
+        }
     </style>
 </head>
 <body class="bg-blue-50">
@@ -216,9 +228,13 @@
             <div class="flex flex-col space-y-5 w-full max-w-xs">
                 <button onclick="showScreen('play-mode-screen')" class="btn">バトル</button>
                 <button onclick="showScreen('party-formation-screen')" class="btn">パーティ編成</button>
+                <button onclick="showScreen('synthesis-screen')" class="btn">合成</button>
                 <button onclick="showScreen('collection-screen')" class="btn">図鑑を見る</button>
                 <button onclick="showScreen('gacha-screen')" class="btn">ガチャる</button>
                 <button onclick="showScreen('how-to-play-screen')" class="btn">遊び方</button>
+            </div>
+            <div class="absolute bottom-8">
+                <button onclick="document.getElementById('reset-confirm-modal').style.display='flex'" class="btn bg-red-500 border-red-700 text-sm px-4 py-2">ゲームをリセット</button>
             </div>
         </div>
 
@@ -240,6 +256,36 @@
                     <div class="flex-grow overflow-y-auto bg-blue-50 p-2 rounded-lg">
                          <h3 class="font-bold text-center mb-2">手持ちのスライム</h3>
                         <div id="owned-slimes-list" class="grid grid-cols-4 gap-2">
+                            <!-- JSで生成 -->
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                     <button onclick="showScreen('home-screen')" class="btn btn-secondary">戻る</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 合成画面 -->
+        <div id="synthesis-screen" class="screen p-4">
+            <div class="w-full max-w-md h-[90vh] flex flex-col">
+                <div class="card flex-grow overflow-hidden flex flex-col">
+                    <h2 class="text-2xl font-bold text-center mb-4">スライム合成</h2>
+                    <div class="flex justify-around items-center mb-4">
+                        <div id="synthesis-base" class="w-32 h-40 border-4 border-dashed border-blue-300 rounded-lg flex flex-col justify-center items-center text-center p-2">
+                            <p class="text-sm">ベース</p>
+                        </div>
+                        <p class="text-2xl font-bold">+</p>
+                        <div id="synthesis-material" class="w-32 h-40 border-4 border-dashed border-gray-400 rounded-lg flex flex-col justify-center items-center text-center p-2">
+                            <p class="text-sm">素材</p>
+                        </div>
+                    </div>
+                    <div id="synthesis-result-preview" class="text-center mb-4 h-16"></div>
+                    <button id="execute-synthesis-btn" class="btn btn-special w-full btn-disabled">合成する</button>
+
+                    <div class="flex-grow overflow-y-auto bg-blue-50 p-2 rounded-lg mt-4">
+                         <h3 class="font-bold text-center mb-2">手持ちのスライムを選ぶ</h3>
+                        <div id="synthesis-slimes-list" class="grid grid-cols-4 gap-2">
                             <!-- JSで生成 -->
                         </div>
                     </div>
@@ -396,21 +442,33 @@
              <div class="card w-full max-w-md h-[80vh] overflow-y-auto">
                  <h2 class="text-3xl font-bold text-center mb-4">遊び方</h2>
                  <div class="space-y-4 text-blue-900">
-                    <p><strong>1. バトル:</strong> バトルは「スロット攻撃」と「とくしゅのうりょく」を使い分けて戦うぞ！</p>
-                    <p><strong>2. 先行後攻:</strong> バトル開始時の連打勝負で先行・後攻が決まる！</p>
-                    <p><strong>3. スロット攻撃:</strong> 揃った絵柄でダメージが変わる！防御時も同じルールでダメージを軽減できるぞ。攻撃するとレジェンドパワーが溜まる！</p>
+                    <p><strong>1. 合成:</strong> 同じ種類のスライムを合成して強化できる！ベースと素材を選んでコインを消費すると、ベーススライムのステータスが少しアップするぞ。</p>
+                    <p><strong>2. バトル:</strong> バトルは「スロット攻撃」と「とくしゅのうりょく」を使い分けて戦うぞ！</p>
+                    <p><strong>3. 先行後攻:</strong> バトル開始時の連打勝負で先行・後攻が決まる！</p>
+                    <p><strong>4. スロット攻撃:</strong> 揃った絵柄でダメージが変わる！防御時も同じルールでダメージを軽減できるぞ。攻撃するとレジェンドパワーが溜まる！</p>
                     <ul class="list-disc list-inside bg-blue-100 p-2 rounded-lg">
                         <li>1個も揃わない: 攻撃力 x 1倍 / ダメージそのまま</li>
                         <li>2個揃う: 攻撃力 x 1.8倍 / ダメージを 9/10 に軽減</li>
                         <li>3個揃う: 攻撃力 x 2.5倍 / ダメージを 6/10 に軽減</li>
                     </ul>
-                    <p><strong>4. とくしゅのうりょく:</strong> レジェンドパワーが100まで溜まると使えるようになるぞ！スライムごとに違う強力な能力だ！</p>
-                    <p><strong>5. ダメージ計算:</strong> 最終的なダメージから、相手の防御力÷3を引いた値が実際のダメージになる。</p>
-                    <p><strong>6. 勝利:</strong> 相手のHPを0にしたら勝利！ストーリーを進めて、新しいスライムやコインを手に入れよう！</p>
+                    <p><strong>5. とくしゅのうりょく:</strong> レジェンドパワーが100まで溜まると使えるようになるぞ！スライムごとに違う強力な能力だ！</p>
+                    <p><strong>6. ダメージ計算:</strong> 最終的なダメージから、相手の防御力÷3を引いた値が実際のダメージになる。</p>
                  </div>
              </div>
              <div class="text-center mt-4">
                 <button onclick="showScreen('home-screen')" class="btn btn-secondary">戻る</button>
+            </div>
+        </div>
+
+        <!-- Reset Confirmation Modal -->
+        <div id="reset-confirm-modal" class="absolute inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
+            <div class="card text-center">
+                <h3 class="text-2xl font-bold">本当にリセットしますか？</h3>
+                <p class="my-4 text-sm">すべてのセーブデータが消えてしまいます！</p>
+                <div class="flex justify-center gap-4 mt-6">
+                    <button onclick="executeReset()" class="btn bg-red-500 border-red-700">はい</button>
+                    <button onclick="document.getElementById('reset-confirm-modal').style.display='none'" class="btn btn-secondary">いいえ</button>
+                </div>
             </div>
         </div>
     </div>
@@ -589,16 +647,19 @@
                 gameState.onlineMatchId = null;
             }
             const matchingBtn = document.getElementById('start-matching-btn');
-            matchingBtn.classList.remove('hidden');
-            document.getElementById('matching-loader').classList.add('hidden');
-            document.getElementById('lobby-message').textContent = '対戦相手を探します';
+            if (matchingBtn) {
+                matchingBtn.classList.remove('hidden');
+                document.getElementById('matching-loader').classList.add('hidden');
+                document.getElementById('lobby-message').textContent = '対戦相手を探します';
+            }
         };
 
         const startOnlineBattle = (matchData, matchId) => {
             const isPlayer1 = matchData.player1_uid === auth.currentUser.uid;
+            const opponentUid = isPlayer1 ? matchData.player2_uid : matchData.player1_uid;
             
             gameState.battle = {
-                online: true, isPlayer1, matchId,
+                online: true, isPlayer1, matchId, opponentUid,
                 playerTeam: isPlayer1 ? matchData.player1_party : matchData.player2_party,
                 enemyTeam: isPlayer1 ? matchData.player2_party : matchData.player1_party,
                 playerTotalStats: calculateTeamStats(isPlayer1 ? matchData.player1_party : matchData.player2_party),
@@ -643,6 +704,7 @@
             updateLegendPowerBar();
 
             if (matchData.winner) {
+                battle.winner = matchData.winner;
                 endBattle();
                 return;
             }
@@ -651,6 +713,7 @@
             if (battle.turn === auth.currentUser.uid) { // 自分のターン
                  if (battle.phase === 'defense') {
                     setBattleMessage(`相手が攻撃してきた！ (${battle.lastAction.matchCount}個) 防御しろ！`);
+                    document.getElementById('battle-actions-area').style.display = 'none';
                     document.getElementById('slot-machine-area').style.display = 'flex';
                     startSlotMachine();
                  } else { // attack phase
@@ -680,6 +743,7 @@
         const slotItems = ['🔥', '💧', '🌿', '🔩', '💀'];
         
         let allSlimes = [];
+        let synthesisState = { base: null, material: null };
 
         function generateSlimeDatabase() {
             const slimes = [
@@ -736,13 +800,23 @@
             const bgColor = slimeTypeColors[slime.type] || '#d1d5db';
             const bodyStyle = slime.type === '伝説' || slime.type === '神' ? `background: ${bgColor};` : `background-color: ${bgColor};`;
             const enemyClass = isEnemy ? 'transform: scaleX(-1);' : '';
+            const plusValue = slime.plus > 0 ? `<div class="plus-value">+${slime.plus}</div>` : '';
             return `
                 <div class="slime-icon" style="${enemyClass}">
                     <div class="slime-body" style="${bodyStyle}">
                         <div class="slime-eyes"><div class="slime-eye"></div><div class="slime-eye"></div></div>
                     </div>
+                    ${plusValue}
                 </div>
             `;
+        }
+        
+        function createNewSlimeInstance(baseSlime) {
+            return {
+                ...baseSlime,
+                uniqueId: Date.now() + Math.random(),
+                plus: 0
+            };
         }
 
         allSlimes = generateSlimeDatabase();
@@ -760,12 +834,13 @@
             if (screenId === 'gacha-screen') updateGachaScreen();
             if (screenId === 'story-map-screen') updateStoryMap();
             if (screenId === 'party-formation-screen') updatePartyFormationScreen();
+            if (screenId === 'synthesis-screen') updateSynthesisScreen();
         }
 
         function saveGame() {
             localStorage.setItem('slimeWarSave', JSON.stringify({
-                slimes: player.slimes.map(s => s.no),
-                party: player.party.map(s => s.no),
+                slimes: player.slimes,
+                party: player.party.map(s => s.uniqueId),
                 coins: player.coins,
                 storyProgress: player.storyProgress,
             }));
@@ -775,8 +850,8 @@
             const saveData = localStorage.getItem('slimeWarSave');
             if (saveData) {
                 const loaded = JSON.parse(saveData);
-                player.slimes = loaded.slimes.map(no => allSlimes.find(s => s.no === no)).filter(Boolean);
-                player.party = loaded.party ? loaded.party.map(no => allSlimes.find(s => s.no === no)).filter(Boolean) : player.slimes.slice(0, 3);
+                player.slimes = loaded.slimes;
+                player.party = loaded.party ? loaded.party.map(uid => player.slimes.find(s => s.uniqueId === uid)).filter(Boolean) : player.slimes.slice(0, 3);
                 player.coins = loaded.coins;
                 player.storyProgress = loaded.storyProgress;
                 return true;
@@ -820,7 +895,7 @@
             }));
 
             document.getElementById('confirm-partner-btn').onclick = () => {
-                const chosenSlime = allSlimes.find(s => s.no === selectedPartnerNo);
+                const chosenSlime = createNewSlimeInstance(allSlimes.find(s => s.no === selectedPartnerNo));
                 player.slimes.push(chosenSlime);
                 player.party = [chosenSlime];
                 saveGame();
@@ -843,7 +918,7 @@
             `;
 
             partyContainer.innerHTML = player.party.map(slime => `
-                <div class="text-center p-1 bg-blue-200 rounded-lg cursor-pointer" onclick="removeFromParty(${slime.no})">
+                <div class="text-center p-1 bg-blue-200 rounded-lg cursor-pointer" onclick="removeFromParty('${slime.uniqueId}')">
                     ${createSlimeHTML(slime)}
                     <p class="text-xs font-bold truncate">${slime.name}</p>
                     <div class="text-[9px] leading-tight">
@@ -854,9 +929,9 @@
                 </div>
             `).join('');
 
-            const nonPartySlimes = player.slimes.filter(s => !player.party.some(p => p.no === s.no));
+            const nonPartySlimes = player.slimes.filter(s => !player.party.some(p => p.uniqueId === s.uniqueId));
             ownedContainer.innerHTML = nonPartySlimes.map(slime => `
-                 <div class="text-center p-1 bg-white rounded-lg cursor-pointer" onclick="addToParty(${slime.no})">
+                 <div class="text-center p-1 bg-white rounded-lg cursor-pointer" onclick="addToParty('${slime.uniqueId}')">
                     ${createSlimeHTML(slime)}
                     <p class="text-[10px] font-bold truncate">${slime.name}</p>
                     <div class="text-[9px] leading-tight">
@@ -868,9 +943,9 @@
             `).join('');
         }
 
-        window.addToParty = (slimeNo) => {
+        window.addToParty = (slimeUniqueId) => {
             if (player.party.length < 3) {
-                const slimeToAdd = player.slimes.find(s => s.no === slimeNo);
+                const slimeToAdd = player.slimes.find(s => s.uniqueId == slimeUniqueId);
                 player.party.push(slimeToAdd);
                 saveGame();
                 updatePartyFormationScreen();
@@ -879,22 +954,119 @@
             }
         }
 
-        window.removeFromParty = (slimeNo) => {
-            player.party = player.party.filter(s => s.no !== slimeNo);
+        window.removeFromParty = (slimeUniqueId) => {
+            player.party = player.party.filter(s => s.uniqueId != slimeUniqueId);
             saveGame();
             updatePartyFormationScreen();
         }
+        
+        // --- Synthesis Logic ---
+        function updateSynthesisScreen() {
+            const baseContainer = document.getElementById('synthesis-base');
+            const materialContainer = document.getElementById('synthesis-material');
+            const resultPreview = document.getElementById('synthesis-result-preview');
+            const executeBtn = document.getElementById('execute-synthesis-btn');
+            const slimesList = document.getElementById('synthesis-slimes-list');
+            
+            baseContainer.innerHTML = synthesisState.base ? `
+                ${createSlimeHTML(synthesisState.base)}
+                <p class="text-xs font-bold truncate">${synthesisState.base.name}</p>
+            ` : '<p class="text-sm">ベース</p>';
+
+            materialContainer.innerHTML = synthesisState.material ? `
+                ${createSlimeHTML(synthesisState.material)}
+                <p class="text-xs font-bold truncate">${synthesisState.material.name}</p>
+            ` : '<p class="text-sm">素材</p>';
+
+            if (synthesisState.base && synthesisState.material) {
+                const base = synthesisState.base;
+                const material = synthesisState.material;
+                const baseInfo = allSlimes.find(s => s.no === material.no);
+
+                const hpUp = Math.floor(baseInfo.hp * 0.1);
+                const atkUp = Math.floor(baseInfo.atk * 0.1);
+                const defUp = Math.floor(baseInfo.def * 0.1);
+
+                resultPreview.innerHTML = `
+                    <p class="font-bold">合成結果</p>
+                    <p class="text-sm">
+                        <span class="text-green-600">HP ${base.hp} → ${base.hp + hpUp} (+${hpUp})</span><br>
+                        <span class="text-red-600">ATK ${base.atk} → ${base.atk + atkUp} (+${atkUp})</span><br>
+                        <span class="text-blue-600">DEF ${base.def} → ${base.def + defUp} (+${defUp})</span>
+                    </p>
+                `;
+                executeBtn.classList.remove('btn-disabled');
+            } else {
+                resultPreview.innerHTML = '';
+                executeBtn.classList.add('btn-disabled');
+            }
+            
+            slimesList.innerHTML = player.slimes.map(slime => `
+                <div class="text-center p-1 bg-white rounded-lg cursor-pointer border-2 ${synthesisState.base?.uniqueId === slime.uniqueId ? 'border-blue-500' : (synthesisState.material?.uniqueId === slime.uniqueId ? 'border-gray-500' : 'border-transparent')}" 
+                     onclick="selectSynthesisSlime('${slime.uniqueId}')">
+                    ${createSlimeHTML(slime)}
+                    <p class="text-[10px] font-bold truncate">${slime.name}</p>
+                </div>
+            `).join('');
+        }
+        
+        window.selectSynthesisSlime = (uniqueId) => {
+            const slime = player.slimes.find(s => s.uniqueId == uniqueId);
+            if (!synthesisState.base || synthesisState.base.uniqueId == uniqueId) {
+                synthesisState.base = slime;
+                synthesisState.material = null; // ベースを選び直したら素材はリセット
+            } else if (synthesisState.base.no === slime.no) { // 同じ種類のスライムのみ素材にできる
+                synthesisState.material = slime;
+            } else {
+                alert('同じ種類のスライムしか素材にできません。');
+            }
+            updateSynthesisScreen();
+        };
+
+        document.getElementById('execute-synthesis-btn').onclick = () => {
+            if (!synthesisState.base || !synthesisState.material) return;
+
+            const base = synthesisState.base;
+            const material = synthesisState.material;
+            const rarityCost = {'N': 10, 'R': 20, 'SR': 50, 'SSR': 100, 'UR': 500};
+            const cost = (rarityCost[base.rarity] || 10) * (base.plus + 1);
+
+            if (player.coins < cost) {
+                alert(`コインが足りません！(${cost}コイン必要)`);
+                return;
+            }
+
+            player.coins -= cost;
+            const baseInfo = allSlimes.find(s => s.no === material.no);
+
+            base.hp += Math.floor(baseInfo.hp * 0.1);
+            base.atk += Math.floor(baseInfo.atk * 0.1);
+            base.def += Math.floor(baseInfo.def * 0.1);
+            base.plus += 1;
+
+            // 素材を削除
+            player.slimes = player.slimes.filter(s => s.uniqueId !== material.uniqueId);
+            // パーティからも素材を削除
+            player.party = player.party.filter(s => s.uniqueId !== material.uniqueId);
+
+            synthesisState = { base: null, material: null };
+            saveGame();
+            updateSynthesisScreen();
+            alert('合成成功！');
+        };
 
         function updateCollectionScreen() {
             const grid = document.getElementById('collection-grid');
             grid.innerHTML = allSlimes.map(slime => {
-                const owned = player.slimes.some(s => s.no === slime.no);
+                const ownedInstances = player.slimes.filter(s => s.no === slime.no);
+                const owned = ownedInstances.length > 0;
                 const slimeHTML = createSlimeHTML(slime);
                 if (owned) {
+                     const strongest = ownedInstances.reduce((max, s) => (s.plus > max.plus ? s : max), ownedInstances[0]);
                     return `
                         <div class="text-center p-1 rounded-lg bg-blue-200 flex flex-col justify-between">
                             <p class="text-[10px] font-bold">${slime.no}:${slime.name}</p>
-                            <div class="mx-auto w-16 h-16 flex justify-center items-center">${slimeHTML}</div>
+                            <div class="mx-auto w-16 h-16 flex justify-center items-center">${createSlimeHTML(strongest)}</div>
                             <div class="text-[9px] leading-tight mt-1">
                                 <span class="text-green-600">H:${slime.hp}</span><br>
                                 <span class="text-red-600">A:${slime.atk}</span>
@@ -991,23 +1163,10 @@
                     const processedResults = [];
 
                     results.forEach(pulledSlime => {
-                        if (!pulledSlime) return; 
-                        const isOwned = player.slimes.some(s => s.no === pulledSlime.no);
-                        if (isOwned) {
-                            let coinReward = 0;
-                            switch(pulledSlime.rarity) {
-                                case 'R': coinReward = 5; break;
-                                case 'SR': coinReward = 20; break;
-                                case 'SSR': coinReward = 50; break;
-                                case 'UR': coinReward = 100; break;
-                                default: coinReward = 2;
-                            }
-                            player.coins += coinReward;
-                            processedResults.push({ slime: pulledSlime, isNew: false, coinReward });
-                        } else {
-                            player.slimes.push(pulledSlime);
-                            processedResults.push({ slime: pulledSlime, isNew: true, coinReward: 0 });
-                        }
+                        if (!pulledSlime) return;
+                        const newInstance = createNewSlimeInstance(pulledSlime);
+                        player.slimes.push(newInstance);
+                        processedResults.push({ slime: newInstance, isNew: true });
                     });
                     
                     saveGame();
@@ -1015,11 +1174,9 @@
                     
                     const resultGrid = document.getElementById('gacha-result-grid');
                     resultGrid.innerHTML = processedResults.map(res => `
-                        <div class="text-center relative p-1 rounded-lg ${res.isNew ? 'bg-yellow-200' : 'bg-gray-200'}">
-                            ${res.isNew ? '<span class="absolute top-0 right-0 bg-red-500 text-white text-[8px] font-bold px-1 py-0.5 rounded-full z-10">NEW</span>' : ''}
+                        <div class="text-center relative p-1 rounded-lg bg-yellow-200">
                             ${createSlimeHTML(res.slime)}
                             <p class="text-xs truncate font-bold">${res.slime.name}</p>
-                            ${!res.isNew ? `<p class="text-[10px] text-yellow-600 font-bold">+${res.coinReward}コイン</p>` : `<p class="text-[10px] text-transparent">.</p>`}
                         </div>
                     `).join('');
                     document.getElementById('gacha-result-modal').style.display = 'flex';
@@ -1239,7 +1396,7 @@
                 for(let j=0; j<20; j++) content += `<div class="slot-item">${slotItems[Math.floor(Math.random() * slotItems.length)]}</div>`;
                 reel.innerHTML = content;
                 reel.style.top = '0px';
-                reel.style.transition = 'top 0.1s linear';
+                reel.style.transition = 'none'; // 回転中はトランジションをなくし、直接位置を更新
                 reelIntervals[i] = setInterval(() => {
                     let top = parseInt(reel.style.top) - 20;
                     if (top < - (reel.scrollHeight - reel.parentElement.clientHeight)) top += reel.scrollHeight / 2;
@@ -1260,6 +1417,8 @@
                     if (dist < closest.dist) { closest.dist = dist; closest.el = item; }
                 });
                 const finalTop = -closest.el.offsetTop + (reelContainer.clientHeight - closest.el.clientHeight) / 2;
+                
+                // 停止時にトランジションを適用してスムーズに止める
                 reel.style.transition = 'top 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
                 reel.style.top = `${finalTop}px`;
                 stoppedReels++;
@@ -1284,83 +1443,97 @@
         }
         
         async function calculateTurnResult() {
-            const results = getSlotResultElements().map(el => el.textContent.trim());
-            const counts = results.reduce((acc, val) => { acc[val] = (acc[val] || 0) + 1; return acc; }, {});
-            const matchCount = results.length > 0 ? Math.max(...Object.values(counts)) : 1;
+                const results = getSlotResultElements().map(el => el.textContent.trim());
+                const counts = results.reduce((acc, val) => { acc[val] = (acc[val] || 0) + 1; return acc; }, {});
+                const matchCount = results.length > 0 ? Math.max(...Object.values(counts)) : 1;
 
-            if (matchCount > 1) {
-                let matchedValue = null;
-                for (const [value, count] of Object.entries(counts)) { if (count >= matchCount) { matchedValue = value; break; } }
-                if (matchedValue) {
-                    getSlotResultElements().forEach(el => {
-                        if (el.textContent.trim() === matchedValue) el.classList.add('matched');
-                    });
+                if (matchCount > 1) {
+                    let matchedValue = null;
+                    for (const [value, count] of Object.entries(counts)) { if (count >= matchCount) { matchedValue = value; break; } }
+                    if (matchedValue) {
+                        getSlotResultElements().forEach(el => {
+                            if (el.textContent.trim() === matchedValue) el.classList.add('matched');
+                        });
+                    }
                 }
-            }
-            const battle = gameState.battle;
-            if (battle.online) {
-                const myKey = battle.isPlayer1 ? 'player1' : 'player2';
-                const enemyKey = battle.isPlayer1 ? 'player2' : 'player1';
-                const enemyUid = battle.isPlayer1 ? matchData.player2_uid : matchData.player1_uid;
+                const battle = gameState.battle;
+                if (battle.online) {
+                    const myKey = battle.isPlayer1 ? 'player1' : 'player2';
+                    const enemyKey = battle.isPlayer1 ? 'player2' : 'player1';
+                    const opponentUid = battle.opponentUid;
 
-                let updateData = {};
-                if (battle.phase === 'attack') {
-                    let multiplier = 1;
-                    if (matchCount === 2) multiplier = 1.8;
-                    if (matchCount === 3) multiplier = 2.5;
-                    const damage = Math.max(0, Math.floor(battle.playerTotalStats.atk * multiplier - battle.enemyTotalStats.def / 3));
-                    battle.enemyTotalStats.currentHp -= damage;
-                    const powerGained = 20 + Math.floor(Math.random() * 31);
-                    battle.playerLegendPower += powerGained;
+                    let updateData = {};
+                    if (battle.phase === 'attack') {
+                        let multiplier = 1;
+                        if (matchCount === 2) multiplier = 1.8;
+                        if (matchCount === 3) multiplier = 2.5;
+                        const damage = Math.max(0, Math.floor(battle.playerTotalStats.atk * multiplier - battle.enemyTotalStats.def / 3));
+                        battle.enemyTotalStats.currentHp -= damage;
+                        const powerGained = 20 + Math.floor(Math.random() * 31);
+                        chargeLegendPower(powerGained);
 
-                    updateData.turn = enemyUid;
-                    updateData.phase = 'defense';
-                    updateData[enemyKey + '_currentHp'] = battle.enemyTotalStats.currentHp;
-                    updateData[myKey + '_legendPower'] = battle.playerLegendPower;
-                    updateData.lastAction = { type: 'slot_attack', matchCount: matchCount, damage: damage };
-                } else { // 'defense'
-                     let reduction = 1;
-                     if (matchCount === 2) reduction = 0.9;
-                     if (matchCount === 3) reduction = 0.6;
-                     const enemyDamage = Math.max(0, Math.floor( (battle.lastAction.damage) * reduction));
-                     battle.playerTotalStats.currentHp -= enemyDamage;
-                     
-                     updateData.turn = enemyUid;
-                     updateData.phase = 'attack';
-                     updateData[myKey + '_currentHp'] = battle.playerTotalStats.currentHp;
-                     updateData.lastAction = { type: 'slot_defense', matchCount: matchCount, finalDamage: enemyDamage };
+                        updateData.turn = opponentUid;
+                        updateData.phase = 'defense';
+                        updateData[enemyKey + '_currentHp'] = battle.enemyTotalStats.currentHp;
+                        updateData[myKey + '_legendPower'] = battle.playerLegendPower;
+                        updateData.lastAction = { type: 'slot_attack', matchCount: matchCount, damage: damage };
+                    } else { // 'defense'
+                        let reduction = 1;
+                        if (matchCount === 2) reduction = 0.9;
+                        if (matchCount === 3) reduction = 0.6;
+                        
+                        const enemyBaseAttack = battle.lastAction.damage; // Use damage from last action
+                        let calculatedDamage = Math.floor(enemyBaseAttack * reduction);
+                        const minDamage = Math.floor(enemyBaseAttack * 0.05);
+                        if(calculatedDamage < minDamage) calculatedDamage = minDamage;
+                        const enemyDamage = Math.max(1, calculatedDamage);
+
+                        battle.playerTotalStats.currentHp -= enemyDamage;
+                        
+                        updateData.turn = opponentUid;
+                        updateData.phase = 'attack';
+                        updateData[myKey + '_currentHp'] = battle.playerTotalStats.currentHp;
+                        updateData.lastAction = { type: 'slot_defense', matchCount: matchCount, finalDamage: enemyDamage };
+                    }
+                    if (battle.playerTotalStats.currentHp <= 0) updateData.winner = opponentUid;
+                    if (battle.enemyTotalStats.currentHp <= 0) updateData.winner = auth.currentUser.uid;
+                    
+                    await updateMatchInFirestore(updateData);
+
+                } else { // Offline
+                    if (battle.phase === 'attack') { 
+                        let multiplier = 1;
+                        if (matchCount === 2) multiplier = 1.8;
+                        if (matchCount === 3) multiplier = 2.5;
+                        const damage = Math.max(0, Math.floor(battle.playerTotalStats.atk * multiplier - battle.enemyTotalStats.def / 3));
+                        setBattleMessage(`${matchCount}個揃った！ ${damage} のダメージ！`);
+                        battle.enemyTotalStats.currentHp -= damage;
+                        const powerGained = 20 + Math.floor(Math.random() * 31);
+                        chargeLegendPower(powerGained);
+                        battle.turn = 'enemy';
+                    } else { // 'defense'
+                        let reduction = 1;
+                        if (matchCount === 2) reduction = 0.9;
+                        if (matchCount === 3) reduction = 0.6;
+                        let enemyMultiplier = 1;
+                        if (battle.enemyMatchCount === 2) enemyMultiplier = 1.8;
+                        if (battle.enemyMatchCount === 3) enemyMultiplier = 2.5;
+                        const enemyBaseAttack = battle.enemyTotalStats.atk * enemyMultiplier;
+
+                        let calculatedDamage = Math.floor((enemyBaseAttack - battle.playerTotalStats.def / 3) * reduction);
+                        const minDamage = Math.floor(enemyBaseAttack * 0.05); // 5% minimum damage
+                        if (calculatedDamage < minDamage) {
+                            calculatedDamage = minDamage;
+                        }
+                        const enemyDamage = Math.max(1, calculatedDamage); // Always deal at least 1 damage
+                        
+                        setBattleMessage(`${matchCount}個で防御！ ${enemyDamage} のダメージを受けた！`);
+                        battle.playerTotalStats.currentHp -= enemyDamage;
+                        battle.turn = 'player';
+                    }
+                    updateHpBars();
+                    setTimeout(battleTurn, 2000);
                 }
-                if (battle.playerTotalStats.currentHp <= 0) updateData.winner = enemyUid;
-                if (battle.enemyTotalStats.currentHp <= 0) updateData.winner = auth.currentUser.uid;
-                
-                await updateMatchInFirestore(updateData);
-            } else { // Offline
-                if (battle.phase === 'attack') { 
-                    let multiplier = 1;
-                    if (matchCount === 2) multiplier = 1.8;
-                    if (matchCount === 3) multiplier = 2.5;
-                    const damage = Math.max(0, Math.floor(battle.playerTotalStats.atk * multiplier - battle.enemyTotalStats.def / 3));
-                    setBattleMessage(`${matchCount}個揃った！ ${damage} のダメージ！`);
-                    battle.enemyTotalStats.currentHp -= damage;
-                    const powerGained = 20 + Math.floor(Math.random() * 31);
-                    chargeLegendPower(powerGained);
-                    battle.turn = 'enemy';
-                } else { // 'defense'
-                    let reduction = 1;
-                    if (matchCount === 2) reduction = 0.9;
-                    if (matchCount === 3) reduction = 0.6;
-                    let enemyMultiplier = 1;
-                    if (battle.enemyMatchCount === 2) enemyMultiplier = 1.8;
-                    if (battle.enemyMatchCount === 3) enemyMultiplier = 2.5;
-                    const enemyBaseAttack = battle.enemyTotalStats.atk * enemyMultiplier;
-                    const enemyDamage = Math.max(0, Math.floor((enemyBaseAttack - battle.playerTotalStats.def / 3) * reduction));
-                    setBattleMessage(`${matchCount}個で防御！ ${enemyDamage} のダメージを受けた！`);
-                    battle.playerTotalStats.currentHp -= enemyDamage;
-                    battle.turn = 'player';
-                }
-                updateHpBars();
-                setTimeout(battleTurn, 2000);
-            }
         }
 
         function endBattle() {
@@ -1384,11 +1557,34 @@
                 let rewardText = `${coinsWon} コイン獲得！`;
                 player.coins += coinsWon;
                 if (battle.stage === player.storyProgress) player.storyProgress++;
+                
                 if (battle.stage % 3 === 0) {
-                    const newSlime = allSlimes[Math.floor(Math.random() * allSlimes.length)];
-                    if (!player.slimes.some(s => s.no === newSlime.no)) {
-                       player.slimes.push(newSlime);
-                       rewardText += `<br>${newSlime.name}が仲間になった！`;
+                    let hpLimit = Infinity, atkLimit = Infinity;
+                    if (battle.stage <= 10) { hpLimit = 800; atkLimit = 100; }
+                    else if (battle.stage <= 20) { hpLimit = 2000; atkLimit = 300; }
+                    else if (battle.stage <= 49) { hpLimit = 5000; atkLimit = 500; }
+                    
+                    // ステージ報酬で手に入るスライムを制限する
+                    const rewardPool = allSlimes.filter(s => s.hp <= hpLimit && s.atk <= atkLimit && s.rarity !== 'UR'); // URはステージ報酬からは出ない
+                    
+                    if (rewardPool.length > 0) {
+                        const newSlimeBase = rewardPool[Math.floor(Math.random() * rewardPool.length)];
+                        const isOwned = player.slimes.some(s => s.no === newSlimeBase.no);
+
+                        if (!isOwned) {
+                           player.slimes.push(createNewSlimeInstance(newSlimeBase));
+                           rewardText += `<br>${newSlimeBase.name}が仲間になった！`;
+                        } else {
+                           let coinReward = 0;
+                           switch(newSlimeBase.rarity) {
+                                case 'R': coinReward = 3; break;
+                                case 'SR': coinReward = 10; break;
+                                case 'SSR': coinReward = 25; break;
+                                default: coinReward = 1;
+                           }
+                           player.coins += coinReward;
+                           rewardText += `<br>既に仲間の${newSlimeBase.name}だった！<br>${coinReward}コインに変換された！`;
+                        }
                     }
                 }
                 rewards.innerHTML = rewardText;
@@ -1420,16 +1616,18 @@
                 if(ended) return;
                 ended = true;
                 clearInterval(countdown);
-                const isWinner = result >= (Math.random() * 15 + 5);
                 
                 if (gameState.battle.online) {
-                    const winnerUid = isWinner ? auth.currentUser.uid : 'opponent'; //仮
-                    // 先行後攻の結果をFirestoreに書き込む (Player1が書き込む)
+                    // Player 1 is the decider to avoid race conditions
                     if(gameState.battle.isPlayer1){
-                       const p2uid = gameState.battle.enemyTeam.uid; // 仮
-                       updateMatchInFirestore({ turn: isWinner ? auth.currentUser.uid : p2uid, phase: 'attack' });
+                       const isWinner = result >= (Math.random() * 10 + 5); // P1 decides winner
+                       const opponentUid = gameState.battle.opponentUid;
+                       const firstTurnUid = isWinner ? auth.currentUser.uid : opponentUid;
+                       updateMatchInFirestore({ turn: firstTurnUid, phase: 'attack' });
                     }
+                    // P2 just waits for the update via onSnapshot
                 } else {
+                    const isWinner = result >= (Math.random() * 15 + 5);
                     gameState.battle.turn = isWinner ? 'player' : 'enemy';
                     setBattleMessage(isWinner ? "あなたの先行！" : "相手の先行！");
                     setTimeout(battleTurn, 1000);
@@ -1449,4 +1647,3 @@
     </script>
 </body>
 </html>
-
