@@ -797,6 +797,7 @@
         }
 
         function createSlimeHTML(slime, isEnemy = false) {
+            if (!slime) return ''; // バグ防止
             const bgColor = slimeTypeColors[slime.type] || '#d1d5db';
             const bodyStyle = slime.type === '伝説' || slime.type === '神' ? `background: ${bgColor};` : `background-color: ${bgColor};`;
             const enemyClass = isEnemy ? 'transform: scaleX(-1);' : '';
@@ -849,12 +850,26 @@
         function loadGame() {
             const saveData = localStorage.getItem('slimeWarSave');
             if (saveData) {
-                const loaded = JSON.parse(saveData);
-                player.slimes = loaded.slimes;
-                player.party = loaded.party ? loaded.party.map(uid => player.slimes.find(s => s.uniqueId === uid)).filter(Boolean) : player.slimes.slice(0, 3);
-                player.coins = loaded.coins;
-                player.storyProgress = loaded.storyProgress;
-                return true;
+                try {
+                    const loaded = JSON.parse(saveData);
+
+                    // 古いセーブデータ形式かチェックし、無効化する
+                    if (!loaded.slimes || loaded.slimes.length === 0 || typeof loaded.slimes[0] !== 'object' || loaded.slimes[0].uniqueId === undefined) {
+                        console.log("古いか無効なセーブデータです。新しいゲームを開始します。");
+                        localStorage.removeItem('slimeWarSave'); // 不正なデータを削除
+                        return false;
+                    }
+
+                    player.slimes = loaded.slimes;
+                    player.party = loaded.party ? loaded.party.map(uid => player.slimes.find(s => s.uniqueId === uid)).filter(Boolean) : player.slimes.slice(0, 3);
+                    player.coins = loaded.coins;
+                    player.storyProgress = loaded.storyProgress;
+                    return true;
+                } catch (e) {
+                    console.error("セーブデータの読み込みに失敗しました:", e);
+                    localStorage.removeItem('slimeWarSave'); // 壊れたデータを削除
+                    return false;
+                }
             }
             return false;
         }
@@ -1647,3 +1662,4 @@
     </script>
 </body>
 </html>
+
