@@ -748,22 +748,22 @@
         function generateSlimeDatabase() {
             const slimes = [
                 // 基本種
-                { no: 1, name: 'スライム', hp: 100, atk: 10, def: 10, type: '基本', rarity: 'N', ability: { name: '体当たり', desc: '敵単体に小ダメージ', type: 'damage', power: 0.8 } },
-                { no: 2, name: 'ビッグスライム', hp: 300, atk: 25, def: 20, type: '基本', rarity: 'R', ability: { name: 'ぷるぷるプレス', desc: '敵単体に中ダメージ', type: 'damage', power: 1.2 } },
+                { no: 1, name: 'スライム', hp: 100, atk: 10, def: 10, type: '基本', rarity: 'N', ability: { name: '体当たり', desc: '敵単体に小ダメージ', type: 'damage', power: 1.2 } },
+                { no: 2, name: 'ビッグスライム', hp: 300, atk: 25, def: 20, type: '基本', rarity: 'R', ability: { name: 'ぷるぷるプレス', desc: '敵単体に中ダメージ', type: 'damage', power: 2.0 } },
                 { no: 3, name: 'キングスライム', hp: 1000, atk: 80, def: 70, type: '基本', rarity: 'SR', ability: { name: '王の号令', desc: '味方全体の攻撃力アップ', type: 'buff_atk', power: 1.2, turns: 3 } },
                 { no: 4, name: 'エンペラースライム', hp: 3200, atk: 250, def: 220, type: '基本', rarity: 'SSR', ability: { name: '皇帝の威厳', desc: '味方全体の防御力アップ', type: 'buff_def', power: 1.3, turns: 3 } },
                 // 火属性
-                { no: 12, name: 'ファイアスライム', hp: 150, atk: 20, def: 12, type: '火', rarity: 'N', ability: { name: 'ファイアボール', desc: '敵単体に火の小ダメージ', type: 'damage', power: 1.0 } },
-                { no: 13, name: 'マグマスライム', hp: 500, atk: 60, def: 80, type: '火', rarity: 'R', ability: { name: '火傷付与', desc: '敵単体に大ダメージ', type: 'damage', power: 1.5 } },
+                { no: 12, name: 'ファイアスライム', hp: 150, atk: 20, def: 12, type: '火', rarity: 'N', ability: { name: 'ファイアボール', desc: '敵単体に火の小ダメージ', type: 'damage', power: 1.5 } },
+                { no: 13, name: 'マグマスライム', hp: 500, atk: 60, def: 80, type: '火', rarity: 'R', ability: { name: '火傷付与', desc: '敵単体に大ダメージ', type: 'damage', power: 2.2 } },
                 // 水属性
-                { no: 20, name: 'アクアスライム', hp: 180, atk: 15, def: 18, type: '水', rarity: 'N', ability: { name: 'スプラッシュ', desc: '敵単体に水の小ダメージ', type: 'damage', power: 1.0 } },
+                { no: 20, name: 'アクアスライム', hp: 180, atk: 15, def: 18, type: '水', rarity: 'N', ability: { name: 'スプラッシュ', desc: '敵単体に水の小ダメージ', type: 'damage', power: 1.5 } },
                 { no: 21, name: 'ヒーリングスライム', hp: 300, atk: 10, def: 40, type: '水', rarity: 'R', ability: { name: 'ヒール', desc: '味方単体のHPを小回復', type: 'heal', power: 100 } },
                 // メタル
                 { no: 101, name: 'メタルスライム', hp: 50, atk: 5, def: 500, type: 'メタル', rarity: 'R', ability: { name: '高速回避', desc: '何も起こらない', type: 'none' } },
                 { no: 103, name: 'ダイヤモンドスライム', hp: 800, atk: 150, def: 3000, type: 'メタル', rarity: 'SSR', ability: { name: '絶対防御', desc: '味方全体の防御を超アップ', type: 'buff_def', power: 1.8, turns: 2 } },
                 // アンデッド
                 { no: 180, name: 'ゾンビスライム', hp: 400, atk: 45, def: 30, type: 'アンデッド', rarity: 'R', ability: { name: 'リヴァイブ', desc: '何も起こらない', type: 'none' } },
-                { no: 183, name: 'リッチスライム', hp: 2800, atk: 320, def: 250, type: 'アンデッド', rarity: 'SSR', ability: { name: 'デッドリーカース', desc: '敵単体に闇の大ダメージ', type: 'damage', power: 2.0 } },
+                { no: 183, name: 'リッチスライム', hp: 2800, atk: 320, def: 250, type: 'アンデッド', rarity: 'SSR', ability: { name: 'デッドリーカース', desc: '敵単体に闇の大ダメージ', type: 'damage', power: 3.5 } },
                  // 伝説
                 { no: 585, name: '虹龍神スライム', hp: 8888, atk: 888, def: 888, type: '伝説', rarity: 'UR', ability: { name: '七色の奇跡', desc: '味方全体のHPを全回復', type: 'full_heal' } },
                 { no: 586, name: '虚無のスライム', hp: 10000, atk: 1000, def: 1000, type: '伝説', rarity: 'UR', ability: { name: '存在抹消', desc: '敵単体に超絶ダメージ', type: 'damage', power: 5.0 } },
@@ -790,7 +790,7 @@
                 if (rank >= 2) rarity = 'R'; // ハイ
                 if (rank >= 4) rarity = 'SR'; // テラ
                 if (rank >= 5) rarity = 'SSR';// ゴッド
-                slimes.push({ no: currentNo, name, hp, atk, def, type, rarity, ability: { name: 'ランダムアタック', desc: '敵にダメージ', type: 'damage', power: 1.0 + rank * 0.2 } });
+                slimes.push({ no: currentNo, name, hp, atk, def, type, rarity, ability: { name: 'ランダムアタック', desc: '敵にダメージ', type: 'damage', power: 1.5 + rank * 0.4 } });
                 existingNos.add(currentNo);
             }
             return slimes.sort((a,b) => a.no - b.no);
@@ -1218,46 +1218,45 @@
             document.getElementById('player-name').textContent = `あなた`;
             document.getElementById('enemy-name').textContent = `てき`;
 
-            let enemyCount = 1, enemyPool = [], hpScale = 1.0, atkScale = 1.0, defScale = 1.0;
+            let enemyPool = [];
+            let enemyCount = 1;
+            let scale = 1.0;
 
-            // --- ステージ難易度調整 ---
-            if (stage <= 10) {
-                // 序盤の難易度をなだらかに調整
-                const baseScale = 0.6 + stage * 0.18; // ステージ1: 0.78倍 ～ ステージ10: 2.4倍
-                hpScale = baseScale * 1.2;  // HPは少し高め
-                atkScale = baseScale * 1.1;  // 攻撃力はそこそこ
-                defScale = baseScale * 0.7;  // 防御力は低めにしてダメージが通りやすくする
-            } else {
-                // ステージ11以降の難易度
-                const baseScale = 1.0 + (stage - 10) * 0.25;
-                hpScale = baseScale;
-                atkScale = baseScale;
-                defScale = baseScale;
-            }
-
+            // --- 新しいステージ難易度調整ロジック ---
             if (stage <= 5) {
-                enemyPool = [ 
-                    allSlimes.find(s => s.no === 1), 
-                    allSlimes.find(s => s.no === 12),
-                    allSlimes.find(s => s.no === 20),
-                ];
-                if(stage > 2) enemyPool.push(allSlimes.find(s => s.no === 2));
-                
-                enemyCount = 1;
-                if (stage >= 2) enemyCount = 2;
-                if (stage >= 4) enemyCount = 3;
-            } else {
+                // ステージ1-5: チュートリアル的な難易度
+                enemyPool = allSlimes.filter(s => s.hp < 350 && s.rarity === 'N');
+                enemyCount = 1 + Math.floor((stage - 1) / 2); // 1, 2, 2, 3, 3匹
+                scale = 0.8 + stage * 0.1; // 0.9 to 1.3
+            } else if (stage <= 15) {
+                // ステージ6-15: 序盤
+                enemyPool = allSlimes.filter(s => s.hp < 1200 && (s.rarity === 'N' || s.rarity === 'R'));
                 enemyCount = 3;
-                const poolLimit = Math.min(allSlimes.length, 10 + (stage - 5) * 4);
-                enemyPool = allSlimes.slice(0, poolLimit);
+                scale = 1.0 + (stage - 5) * 0.15; // 1.15 to 2.5
+            } else if (stage <= 30) {
+                // ステージ16-30: 中盤
+                enemyPool = allSlimes.filter(s => s.hp < 4000 && (s.rarity === 'R' || s.rarity === 'SR'));
+                enemyCount = 3;
+                scale = 2.0 + (stage - 15) * 0.2; // 2.2 to 5.0
+            } else {
+                // ステージ31以降: 終盤
+                enemyPool = allSlimes.filter(s => s.rarity !== 'N'); // Nはもう出ない
+                enemyCount = 3;
+                scale = 4.0 + (stage - 30) * 0.25; // 4.25+
+            }
+            
+            // 念のためプールが空の場合は弱いスライムで埋める
+            if (enemyPool.length === 0) {
+                enemyPool.push(allSlimes.find(s => s.no === 1));
             }
             // --- 調整ここまで ---
 
             const enemyTeam = Array.from({length: enemyCount}, () => {
                 let et = { ...enemyPool[Math.floor(Math.random() * enemyPool.length)] };
-                et.hp = Math.max(10, Math.floor(et.hp * hpScale));
-                et.atk = Math.max(5, Math.floor(et.atk * atkScale));
-                et.def = Math.max(5, Math.floor(et.def * defScale));
+                // ステータスをスケール
+                et.hp = Math.max(10, Math.floor(et.hp * scale));
+                et.atk = Math.max(5, Math.floor(et.atk * scale));
+                et.def = Math.max(5, Math.floor(et.def * scale));
                 return et;
             });
 
@@ -1690,4 +1689,6 @@
     </script>
 </body>
 </html>
+
+
 
